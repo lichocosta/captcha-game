@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" type="image/x-icon" href="imgs/th-solid.svg">
+  <title>Captcha Game</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <main>
+    <section id="welcomeSection" class="d-flex flex-column justify-content-between container-fluid">
+      <div class="d-flex justify-content-between align-items-center px-3">
+        <h2 class="fs-1 my-3">Captcha Game</h2>
+        <button type="button" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#configModal">
+          <i class="fa-solid fa-gear me-2"></i>
+          Settings
+        </button>
+      </div>
+      <div class="mx-auto">
+        <p>
+          Select all the images with the indicated word in the shortest time possible.
+        </p>
+        <h5>Instructions</h5>
+        <ol>
+          <li>Enter one word on each field.</li>
+          <li>Press the "Start" button.</li>
+          <li>Select the required images.</li>
+          <li>Press the "Send" button to see your score.</li>
+        </ol>
+      </div>
+      <div class="d-flex align-items-center flex-column col-10 col-sm-8 col-md-6 col-lg-4 mx-auto gap-4 mb-5">
+        <input class="form-control " placeholder="Eg: cat" type="text" id="wordOne">
+        <input class="form-control " placeholder="Eg: dog" type="text" id="wordTwo">
+        <button class="btn btn-primary px-3" id="start">Start</button>
+      </div>
+    </section>
+
+    <section id="gameSection" class="d-none">
+      <div class="d-flex justify-content-center flex-column align-items-center">
+        <div class="d-flex align-items-center flex-column justify-content-center m-3 p-2 border bg-white">
+          <div class="bg-primary text-light w-100 p-3">
+            Select the images that contain: <br>
+            <h2 id="objetiveGame" class="text-uppercase mb-0 text-center mt-2"></h2>
+          </div>
+          <div class="my-2" id="grid"></div>
+          <div class="d-flex justify-content-between w-100 py-2 align-items-center border-top">
+            <h3 class="mb-0 ">
+              Time:
+              <span id="timer"></span>
+            </h3>
+            <button class="btn btn-primary px-3" id="send">Send</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="resultSection" class="d-none">
+      <div class="d-flex align-items-center flex-column justify-content-center">
+        <div class="d-flex align-items-center flex-column justify-content-center col-8 col-lg-4 mx-auto p-5 border bg-white">
+          <h2>Your score</h2>
+          <p class="fw-bold" id="scoreNumber"></p>
+          <div class="d-flex flex-column text-start">
+            <small>
+              Successes: <strong id="quantityCorrectSpan"></strong> / <strong id="selectedWordQuantitySpan"></strong>
+            </small>
+            <small>
+              Mistakes: <strong id="quantityIncorrectImagesSpan"></strong>
+            </small>
+            <small>Time: <strong id="elapsedTimeSpan"></strong> seconds.</small>
+          </div>
+          <button class="btn btn-primary mt-5 d-flex align-items-center" id="restart">
+            <i class="fa-solid fa-arrow-rotate-left me-1"></i>
+            Play again
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Settings Modal -->
+    <div class="modal fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="configModalLabel">Settings</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body gap-4 d-flex flex-column">
+            <div class="input-group flex-nowrap">
+              <span class="input-group-text" id="addon-wrapping">Columns</span>
+              <input  onkeydown="if(event.key==='.'){event.preventDefault();}"  oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,'');" id="columnCountInput" type="number" step="1" min="2" max="7" class="form-control" placeholder="2, 3, ..., 7" aria-label="Username" aria-describedby="addon-wrapping">
+            </div>
+            <div class="input-group flex-nowrap">
+              <span class="input-group-text" id="addon-wrapping">Rows</span>
+              <input  onkeydown="if(event.key==='.'){event.preventDefault();}"  oninput="event.target.value = event.target.value.replace(/[^0-9]*/g,'');" id="rowCountInput" type="number" step="1" min="2" max="7" class="form-control" placeholder="2, 3, ..., 7" aria-label="Username" aria-describedby="addon-wrapping">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="saveSettings" type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <script src="index.js"></script>
+</body>
+</html>
