@@ -36,21 +36,23 @@ let interval;
 
 gridContainer.style = `grid-template-columns: repeat(${columnCount}, 0fr);`
 
+//API
 async function getImagesByKeyword(keyword, quantity) {
-  const url = `https://api.unsplash.com/search/photos?query=${keyword}&per_page=${quantity}&client_id=Y9V-BNTn2mzBgNVlYw4JOIeEuI8BYYpVt4VnSmt3PxM`;
-  const response = await fetch(url);
-
-  if (response.status !== 200) {
-    return console.error(response.statusText);
+  try {
+    const url = `https://api.unsplash.com/search/photos?query=${keyword}&per_page=${quantity}&client_id=Y9V-BNTn2mzBgNVlYw4JOIeEuI8BYYpVt4VnSmt3PxM`;
+    const response = await fetch(url);
+    const data = await response.json();
+    const images = data.results.map(image => ({
+      id: image.id,
+      url: image.urls.small,
+      word: keyword
+    }));
+    
+    return images;
+  } catch (error) {
+    alert('Something went wrong getting the images from Unsplash. Please try again later.');
+    return [];
   }
-
-  const data = await response.json();
-  const images = data.results.map(image => ({
-    id: image.id,
-    url: image.urls.small,
-    word: keyword
-  }));
-  return images;
 }
 
 function shuffle(array) {
@@ -178,6 +180,7 @@ function finishGame() {
   isPlaying = false;
 }
 
+//Settings
 saveSettings.addEventListener('click', () => {
   columnCount = parseInt(columnCountInput.value);
   if (columnCount > MAX_ROWCOLS_NUMBER) columnCount = MAX_ROWCOLS_NUMBER;
@@ -202,7 +205,7 @@ function validateColsRowsNumber(event) {
 columnCountInput.addEventListener('blur', validateColsRowsNumber)
 rowCountInput.addEventListener('blur', validateColsRowsNumber)
 
-
+//Keyboard events
 wordOneInput.addEventListener("keyup", (event) => {
   if (event.key !== "Enter") return;
   wordTwoInput.focus();
